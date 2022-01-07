@@ -6,3 +6,5 @@ __pycache__/
 .idea
 tests/Test_dataset/output/
 .gitignore
+build/
+loki.egg-info/
