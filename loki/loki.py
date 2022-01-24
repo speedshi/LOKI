@@ -1,3 +1,9 @@
+"""
+Coordinate convention: X-axis -> East; Y-axis -> North; Z-axis -> vertical down.
+
+"""
+
+
 import os
 import numpy as num
 import matplotlib.pyplot as plt
@@ -213,7 +219,7 @@ class Loki:
         f.write(event_t0s+'    '+str(late)+'   '+str(lone)+'   '+str(zb)+'   '+str(errmax)+'   '+str(cb)+'   '+str(cmax)+'\n')
         f.close()
 
-    def coherence_plot(self, event_path, corrmatrix, xax, yax, zax, itrial, normalization=False):
+    def coherence_plot(self, event_path, corrmatrix, xax, yax, zax, itrial, normalization=False, figfmt='.png'):
         nx, ny, nz = num.shape(corrmatrix)
         CXY = num.zeros([ny, nx])
         for i in range(ny):
@@ -235,7 +241,7 @@ class Loki:
         else:
             nrm = None
 
-        fig = plt.figure()
+        fig = plt.figure(dpi=600)
         fig.suptitle('Coherence matrix X-Y', fontsize=14, fontweight='bold')
         ax = fig.gca()
         cmap = plt.cm.get_cmap('jet', 100)
@@ -244,9 +250,10 @@ class Loki:
         ax.set_ylabel('Y (km)')
         cbar = plt.colorbar(cs)
         ax.set_aspect('equal')
-        plt.savefig(event_path+'/'+'Coherence_matrix_xy'+str(itrial)+'.eps')
+        figname = os.path.join(event_path, 'Coherence_matrix_xy'+str(itrial)+figfmt)
+        plt.savefig(figname, dpi=600)
 
-        fig = plt.figure()
+        fig = plt.figure(dpi=600)
         fig.suptitle('Coherence matrix X-Z', fontsize=14, fontweight='bold')
         ax = fig.gca()
         cmap = plt.cm.get_cmap('jet', 100)
@@ -256,9 +263,10 @@ class Loki:
         cbar = plt.colorbar(cs)
         ax.invert_yaxis()
         ax.set_aspect('equal')
-        plt.savefig(event_path+'/'+'Coherence_matrix_xz'+str(itrial)+'.eps')
+        figname = os.path.join(event_path, 'Coherence_matrix_xz'+str(itrial)+figfmt)
+        plt.savefig(figname, dpi=600)
 
-        fig = plt.figure()
+        fig = plt.figure(dpi=600)
         fig.suptitle('Coherence matrix Y-Z', fontsize=14, fontweight='bold')
         ax = fig.gca()
         cmap = plt.cm.get_cmap('jet', 100)
@@ -268,7 +276,8 @@ class Loki:
         cbar = plt.colorbar(cs)
         ax.invert_yaxis()
         ax.set_aspect('equal')
-        plt.savefig(event_path+'/'+'Coherence_matrix_yz'+str(itrial)+'.eps')
+        figname = os.path.join(event_path, 'Coherence_matrix_yz'+str(itrial)+figfmt)
+        plt.savefig(figname, dpi=600)
         plt.close("all")
         
     
