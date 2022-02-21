@@ -42,7 +42,7 @@ class Loki:
         events=[]
         data_tree=[]
         for root, dirs, files in os.walk(data_path):
-            if not dirs:
+            if (not dirs) and (files) and (files[0][-4:] != '.txt'):
                 data_tree.append(root)
         data_tree.sort()
         events = [idtree.split('/')[-1] for idtree in data_tree]
