@@ -28,7 +28,7 @@ class Stacktraces:
             self.loki_input(wobj, tobj, derivative=False, direct_input=True, normalize=normalize)
             
             # compute array element wise power over the input probabilities if needed
-            if 'ppower' in inputs:
+            if ('ppower' in inputs) and (inputs['ppower'] is not None):
                 self.obs_dataV = self.obs_dataV**inputs['ppower']
                 self.obs_dataH = self.obs_dataH**inputs['ppower']
 

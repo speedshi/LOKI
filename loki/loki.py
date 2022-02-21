@@ -19,6 +19,7 @@ from loki import stacktraces
 from loki import LatLongUTMconversion
 import tt_processing                       # C
 import location_t0                         # C  for multiplying the P- and S-stacking values using this
+#import location_t0_tmax                   # C  for also output max coherency over time samples
 #import location_t0_plus                   # C  for adding the P- and S-stacking values using this
 
 
@@ -81,15 +82,23 @@ class Loki:
             
         npr = inputs['npr']
         model = inputs['model']
+        # whether filtering input data
         if 'freq' in inputs:
             freq = inputs['freq']
         else:
             freq = None  # no filtering
+        # whether ouput the computed CFs
         if 'opsf' in inputs:
             opsf = inputs['opsf']
         else:
             opsf = False
+        # whether to compute element wise power over the phase probabilities before stacking
+        if 'ppower'  not in inputs:
+            inputs['ppower'] = None
         
+        # create the file for outputting catalog
+        ff = open(self.output_path+'/'+'catalogue', 'a')
+        ff.close()
         
         # load traveltime data set
         tobj = traveltimes.Traveltimes(self.db_path, self.hdr_filename)
@@ -138,6 +147,7 @@ class Loki:
                         ioformatting.vector2trace(datainfo, obs_dataS[ista,:], self.output_path+'/'+event+'/cf/trial{}'.format(i))
 
                 iloctime, corrmatrix = location_t0.stacking(tp_mod, ts_mod, obs_dataP, obs_dataS, npr)  # iloctime[0]: the grid index of the maximum stacking point; iloctime[1]: the time index at the maximum stacking point
+                #iloctime, corrmatrix, cohmaxtt = location_t0_tmax.stacking(tp_mod, ts_mod, obs_dataP, obs_dataS, npr)  # iloctime[0]: the grid index of the maximum stacking point; iloctime[1]: the time index at the maximum stacking point
                 evtpmin = num.amin(tp_modse[iloctime[0],:])
                 event_t0 = sobj.dtime_max + datetime.timedelta(seconds=iloctime[1]*sobj.deltat) - datetime.timedelta(seconds=evtpmin)  # event origin time
                 event_t0s = (event_t0).isoformat()
@@ -165,6 +175,9 @@ class Loki:
                 
                 # save the stacked coherence matrix
                 num.save(self.output_path+'/'+event+'/'+'corrmatrix_trial_'+str(i),corrmatrix)
+                
+                # # save the maximum stacked coherency over time
+                # num.save(self.output_path+'/'+event+'/'+'cohmaxtt_trial_'+str(i),cohmaxtt)
                 
                 # plot migration profiles
                 self.coherence_plot(self.output_path+'/'+event, corrmatrix, tobj.x, tobj.y, tobj.z, i)
