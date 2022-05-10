@@ -82,19 +82,26 @@ class Loki:
             
         npr = inputs['npr']
         model = inputs['model']
+        
         # whether filtering input data
         if 'freq' in inputs:
             freq = inputs['freq']
         else:
             freq = None  # no filtering
+            
         # whether ouput the computed CFs
         if 'opsf' in inputs:
             opsf = inputs['opsf']
         else:
             opsf = False
+            
         # whether to compute element wise power over the phase probabilities before stacking
         if 'ppower'  not in inputs:
             inputs['ppower'] = None
+        
+        # whether to output the migration volume
+        if 'output_migv' not in inputs:
+            inputs['output_migv'] = True
         
         # create the file for outputting catalog
         ff = open(self.output_path+'/'+'catalogue', 'a')
@@ -174,7 +181,8 @@ class Loki:
                 out_file.close()
                 
                 # save the stacked coherence matrix
-                num.save(self.output_path+'/'+event+'/'+'corrmatrix_trial_'+str(i),corrmatrix)
+                if inputs['output_migv']:
+                    num.save(self.output_path+'/'+event+'/'+'corrmatrix_trial_'+str(i),corrmatrix)
                 
                 # # save the maximum stacked coherency over time
                 # num.save(self.output_path+'/'+event+'/'+'cohmaxtt_trial_'+str(i),cohmaxtt)
