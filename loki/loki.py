@@ -6,6 +6,8 @@ Coordinate convention: X-axis -> East; Y-axis -> North; Z-axis -> vertical down.
 
 import os
 import numpy as num
+import matplotlib
+matplotlib.use('Agg')  # set the backend before importing pyplot
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
 import datetime
