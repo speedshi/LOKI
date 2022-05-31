@@ -231,14 +231,14 @@ class Loki:
             evdepth_km = data[3]  # depth in km
             migv_max = data[4]  # the maximum coherence over the 3D corrmatrix
             
-            # nomalize corrmatrix first, let minimal->1, maximum->2
-            n1 = 1.0  # minimal limit
-            n2 = 2.0  # maximum limit
-            dmax = num.amax(corrmatrix, axis=None, keepdims=True)
-            dmin = num.amin(corrmatrix, axis=None, keepdims=True)
-            k = (n2-n1)/(dmax-dmin)
-            b = (dmax*n1-dmin*n2)/(dmax-dmin)
-            corrmatrix = k*corrmatrix + b
+            # # nomalize corrmatrix first, let minimal->1, maximum->2
+            # n1 = 1.0  # minimal limit
+            # n2 = 2.0  # maximum limit
+            # dmax = num.amax(corrmatrix, axis=None, keepdims=True)
+            # dmin = num.amin(corrmatrix, axis=None, keepdims=True)
+            # k = (n2-n1)/(dmax-dmin)
+            # b = (dmax*n1-dmin*n2)/(dmax-dmin)
+            # corrmatrix = k*corrmatrix + b
             
             migv_std = num.std(corrmatrix, axis=None)  # the coherence standard deviation of the 3D corrmatrix
             migv_median = num.median(corrmatrix, axis=None)  # the median coherence of the 3D corrmatrix
