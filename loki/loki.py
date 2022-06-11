@@ -231,15 +231,6 @@ class Loki:
             evdepth_km = data[3]  # depth in km
             migv_max = data[4]  # the maximum coherence over the 3D corrmatrix
             
-            # # nomalize corrmatrix first, let minimal->1, maximum->2
-            # n1 = 1.0  # minimal limit
-            # n2 = 2.0  # maximum limit
-            # dmax = num.amax(corrmatrix, axis=None, keepdims=True)
-            # dmin = num.amin(corrmatrix, axis=None, keepdims=True)
-            # k = (n2-n1)/(dmax-dmin)
-            # b = (dmax*n1-dmin*n2)/(dmax-dmin)
-            # corrmatrix = k*corrmatrix + b
-            
             migv_std = num.std(corrmatrix, axis=None)  # the coherence standard deviation of the 3D corrmatrix
             migv_median = num.median(corrmatrix, axis=None)  # the median coherence of the 3D corrmatrix
             migv_mean = num.mean(corrmatrix, axis=None)  # the mean value of the migration data volume
@@ -248,9 +239,24 @@ class Loki:
             migv_kurtosis = stats.kurtosis(corrmatrix, axis=None, nan_policy='omit')  # kurtosis of the migration data volume
             migv_skewness = stats.skew(corrmatrix, axis=None, nan_policy='omit')  # skewness of the migration data volume
             
+            # nomalize corrmatrix, let minimal->0, maximum->1
+            n1 = 0.0  # minimal limit
+            n2 = 1.0  # maximum limit
+            dmax = num.amax(corrmatrix, axis=None, keepdims=True)
+            dmin = num.amin(corrmatrix, axis=None, keepdims=True)
+            k = (n2-n1)/(dmax-dmin)
+            b = (dmax*n1-dmin*n2)/(dmax-dmin)
+            corrmatrix = k*corrmatrix + b
+            
+            migv_normstd = num.std(corrmatrix, axis=None)  # the coherence standard deviation of the 3D corrmatrix
+            migv_normMAD = stats.median_absolute_deviation(corrmatrix, axis=None, scale=1, nan_policy='omit')  # median absolute deviation of the migration data volume
+            migv_normkurtosis = stats.kurtosis(corrmatrix, axis=None, nan_policy='omit')  # kurtosis of the migration data volume
+            migv_normskewness = stats.skew(corrmatrix, axis=None, nan_policy='omit')  # skewness of the migration data volume
+            
             f = open(self.output_path+'/'+'catalogue', 'a')
             f.write(event_t0s+'    '+str(late)+'    '+str(lone)+'    '+str(evdepth_km)+'    '+str(migv_std)+'    '+str(migv_median)+'    '+str(migv_max)
-                    +'    '+str(migv_mean)+'    '+str(migv_min)+'    '+str(migv_MAD)+'    '+str(migv_kurtosis)+'    '+str(migv_skewness)+'\n')
+                    +'    '+str(migv_mean)+'    '+str(migv_min)+'    '+str(migv_MAD)+'    '+str(migv_kurtosis)+'    '+str(migv_skewness)+'    '
+                    +str(migv_normstd)+'    '+str(migv_normMAD)+'    '+str(migv_normkurtosis)+'    '+str(migv_normskewness)+'\n')
             f.close()
 
     def coherence_plot(self, event_path, corrmatrix, xax, yax, zax, itrial, normalization=False, figfmt='.png'):
