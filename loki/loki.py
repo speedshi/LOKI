@@ -135,8 +135,8 @@ class Loki:
                 if STALTA:
                     # need to calculate STA/LTA from the characteristic funtion
                     # then stack the STA/LTA for imaging
-                    nshort_p = int(tshortp[i]//sobj.deltat)
-                    nshort_s = int(tshorts[i]//sobj.deltat)
+                    nshort_p = round(tshortp[i]/sobj.deltat)
+                    nshort_s = round(tshorts[i]/sobj.deltat)
                     obs_dataP, obs_dataS = sobj.loc_stalta(nshort_p, nshort_s, slrat, norm=1)
                 else:
                     # no need to calculate STA/LTA 
