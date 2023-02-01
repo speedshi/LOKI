@@ -40,7 +40,8 @@ class Waveforms:
             for tr in traces:
                 if tr.stats.channel[-1]==comp:
                     dtime=datetime.strptime(str(tr.stats.starttime),"%Y-%m-%dT%H:%M:%S.%fZ")
-                    self.stream[comp][tr.stats.station]=[dtime, tr.stats.delta, tr.data]
+                    station_id = "{}.{}.{}.{}".format(tr.stats.network, tr.stats.station, tr.stats.location, tr.stats.channel[:-1])
+                    self.stream[comp][station_id]=[dtime, tr.stats.delta, tr.data]
 
 
 class WaveformLoadingError(Exception):
