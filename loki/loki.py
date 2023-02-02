@@ -111,6 +111,13 @@ class Loki:
         if 'migv_4D' not in inputs:
             inputs['migv_4D'] = False
         
+        # set how to identify each unique station for waveforms.Waveforms
+        # can be 'station', 'network.station', 'network.station.location', 'network.station.location.instrument'
+        if 'station_idmode' in inputs:
+            station_idmode = inputs['station_idmode']
+        else:
+            station_idmode = 'station'
+
         # create the file for outputting catalog
         ff = open(self.output_path+'/'+'catalogue', 'a')
         ff.close()
@@ -121,7 +128,7 @@ class Loki:
         ts = tobj.load_traveltimes('S', model, precision)
 
         for event_path in self.data_tree:
-            wobj = waveforms.Waveforms(event_path, extension, comp, freq)
+            wobj = waveforms.Waveforms(event_path=event_path, extension=extension, comps=comp, freq=freq, station_idmode=station_idmode)
             sobj = stacktraces.Stacktraces(tobj, wobj, **inputs)
             # event = sobj.evid
             event = event_path.split('/')[-1]

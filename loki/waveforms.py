@@ -5,11 +5,11 @@ from datetime import datetime
 
 class Waveforms:
 
-    def __init__(self, event_path, extension='*', comps=['E','N','Z'], freq=None):
+    def __init__(self, event_path, extension='*', comps=['E','N','Z'], freq=None, station_idmode='network.station'):
         if not os.path.isdir(event_path):
             raise ValueError('Error: data path does not exist')
         try:
-            self.load_waveforms(event_path, extension, comps, freq)
+            self.load_waveforms(event_path, extension, comps, freq, station_idmode)
         except:
             raise WaveformLoadingError('Error: data not read for the event: %s' %(event_path))
         self.station_list()
@@ -22,7 +22,7 @@ class Waveforms:
                     data_stalist.append(sta)
         self.data_stations=set(data_stalist)
 
-    def load_waveforms(self, event_path, extension, comps, freq):
+    def load_waveforms(self, event_path, extension, comps, freq, station_idmode):
         files=os.path.join(event_path,extension)
         traces=read(files)
         
@@ -40,7 +40,16 @@ class Waveforms:
             for tr in traces:
                 if tr.stats.channel[-1]==comp:
                     dtime=datetime.strptime(str(tr.stats.starttime),"%Y-%m-%dT%H:%M:%S.%fZ")
-                    station_id = "{}.{}.{}.{}".format(tr.stats.network, tr.stats.station, tr.stats.location, tr.stats.channel[:-1])
+                    if station_idmode == 'station':
+                        station_id = "{}".format(tr.stats.station)
+                    elif station_idmode == 'network.station':
+                        station_id = "{}.{}".format(tr.stats.network, tr.stats.station)
+                    elif station_idmode == 'network.station.location':
+                        station_id = "{}.{}.{}".format(tr.stats.network, tr.stats.station, tr.stats.location)
+                    elif station_idmode == 'network.station.location.instrument':
+                        station_id = "{}.{}.{}.{}".format(tr.stats.network, tr.stats.station, tr.stats.location, tr.stats.channel[:-1])
+                    else:
+                        raise ValueError
                     self.stream[comp][station_id]=[dtime, tr.stats.delta, tr.data]
 
 
