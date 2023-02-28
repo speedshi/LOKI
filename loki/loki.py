@@ -257,7 +257,7 @@ class Loki:
             migv_median = num.median(corrmatrix, axis=None)  # the median coherence of the corrmatrix
             migv_mean = num.mean(corrmatrix, axis=None)  # the mean value of the migration data volume
             migv_min = num.amin(corrmatrix, axis=None)  # the minimal value of the migration data volume
-            migv_MAD = stats.median_absolute_deviation(corrmatrix, axis=None, scale=1, nan_policy='omit')  # median absolute deviation of the migration data volume
+            migv_MAD = stats.median_abs_deviation(corrmatrix, axis=None, scale=1, nan_policy='omit')  # median absolute deviation of the migration data volume
             migv_kurtosis = stats.kurtosis(corrmatrix, axis=None, nan_policy='omit')  # kurtosis of the migration data volume
             migv_skewness = stats.skew(corrmatrix, axis=None, nan_policy='omit')  # skewness of the migration data volume
             
