@@ -271,7 +271,7 @@ class Loki:
             corrmatrix = k*corrmatrix + b
             
             migv_normstd = num.std(corrmatrix, axis=None)  # the coherence standard deviation of the corrmatrix
-            migv_normMAD = stats.median_absolute_deviation(corrmatrix, axis=None, scale=1, nan_policy='omit')  # median absolute deviation of the migration data volume
+            migv_normMAD = stats.median_abs_deviation(corrmatrix, axis=None, scale=1, nan_policy='omit')  # median absolute deviation of the migration data volume
             migv_normkurtosis = stats.kurtosis(corrmatrix, axis=None, nan_policy='omit')  # kurtosis of the migration data volume
             migv_normskewness = stats.skew(corrmatrix, axis=None, nan_policy='omit')  # skewness of the migration data volume
             
